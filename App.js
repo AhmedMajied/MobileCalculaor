@@ -30,15 +30,20 @@ class App extends React.Component {
   pressButton(button) {
     
     if(button == '='){
-      this.setState({
-        result: eval(this.state.calculation)
-      })
+      if(this.validate())
+        this.setState({result: eval(this.state.calculation)})
       return;
     }
     
     this.setState({
       calculation: this.state.calculation + button
     })
+  }
+
+  validate(){
+    if(this.operations.indexOf(this.state.calculation.slice(-1)) != -1)
+      return false;
+    return true;
   }
 
   pressOperation(operation) {
@@ -58,7 +63,6 @@ class App extends React.Component {
         if(this.operations.indexOf(lastChar) > 0) return;
         if(this.state.calculation == "") return;
         this.setState({ calculation: this.state.calculation + operation})
-
     }
   }
 
@@ -68,7 +72,7 @@ class App extends React.Component {
     for (let i = 0; i < buttons.length; i++) {
       let row = [];
       for (let j = 0; j < 3; j++) {
-        row.push(<TouchableOpacity onPress={() => this.pressButton(buttons[i][j])} style={styles.btn}>
+        row.push(<TouchableOpacity key={buttons[i][j]} onPress={() => this.pressButton(buttons[i][j])} style={styles.btn}>
           <Text style={styles.btnText}>{buttons[i][j]}</Text>
         </TouchableOpacity>);
       }
@@ -77,7 +81,7 @@ class App extends React.Component {
 
     let col = [];
     for (let i = 0; i < this.operations.length; i++) {
-      col.push(<TouchableOpacity onPress={() => this.pressOperation(this.operations[i])} style={styles.btn}>
+      col.push(<TouchableOpacity key={this.operations[i]} onPress={() => this.pressOperation(this.operations[i])} style={styles.btn}>
         <Text style={styles.btnText}>{this.operations[i]}</Text>
       </TouchableOpacity>)
     }
@@ -103,21 +107,19 @@ const styles = StyleSheet.create({
   },
   calculation: {
     flex: 2,
-    backgroundColor: 'green',
     justifyContent: 'center',
     alignItems: 'flex-end'
   },
   calculationText: {
-    fontSize: 30,
-    color: 'white'
+    fontSize: 70,
+    color: 'black'
   },
   resultText: {
-    fontSize: 25,
-    color: 'white'
+    fontSize: 50,
+    color: 'red'
   },
   result: {
     flex: 1,
-    backgroundColor: 'red',
     justifyContent: 'center',
     alignItems: 'flex-end'
   },
@@ -140,13 +142,13 @@ const styles = StyleSheet.create({
   },
   numbers: {
     flex: 3,
-    backgroundColor: 'blue',
+    backgroundColor: '#434343',
     justifyContent: 'center',
 
   },
   operations: {
     flex: 1,
-    backgroundColor: 'black'
+    backgroundColor: '#636363'
   }
 });
 
